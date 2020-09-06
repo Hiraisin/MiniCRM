@@ -58,7 +58,10 @@ class CompanyController extends Controller
             }
             $file = $request->file('logo');
             $ext = $file->extension();
-            $path = Storage::putFile('public/images', $file);
+            if (!Storage::exists('public/images')) {
+                Storage::makeDirectory('public/images', 0777, true); //creates directory
+                $path = Storage::putFile('public/images', $file);
+            }
 
             $data = new Company;
             $data->name = $request->input('name');
