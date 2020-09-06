@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Mail\NewCompanyEmail;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+
 
 class CompanyController extends Controller
 {
@@ -63,6 +66,7 @@ class CompanyController extends Controller
             $data->email = $request->input('email');
             $data->logo = basename($path);
             $data->save();
+            Mail::to('jikukan.putra@gmail.com')->send(new NewCompanyEmail($data));
 
             return redirect()->route('company.index')->withSuccess('Tambah Company Berhasil');
         } catch (Exception $ex) {
